@@ -1,0 +1,2 @@
+D:\Work\Galclone\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+D:\Work\Galclone\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
