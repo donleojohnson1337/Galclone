@@ -48,8 +48,7 @@ public class Planet : MonoBehaviour
     private void StartLifeOnPlanet()
     {
         lifeOnPlanet = StartCoroutine(CreatePopulation());
-        if (owner == Owner.PLAYER)
-            ui.SetActive();
+        ui.SetActive(owner == Owner.PLAYER);
     }
 
     private void StopLifeOnPlanet()
@@ -58,6 +57,7 @@ public class Planet : MonoBehaviour
         lifeOnPlanet = null;
     }
 
+    //Создание нового населения раз в секунду
     private IEnumerator CreatePopulation()
     {
         while (true)
@@ -71,6 +71,25 @@ public class Planet : MonoBehaviour
         }
     }
 
+    //Отправка десанта на другую планету
+    public void SendTroops(Planet targetPlanet)
+    {
+        if (population < 2) return;
+        int troopsCount = population / 2;
+        population -= troopsCount;
+
+        for (int i = 0; i < troopsCount; i++)
+        {
+            Vector3 spawn = transform.position;
+            spawn.z = 10;
+            Battleship b = Instantiate(GameManager.instance.battleshipPrefab, spawn, Quaternion.identity).GetComponent<Battleship>();
+            b.SetTarget(owner, targetPlanet.gameObject, 1);
+        }
+
+        UpdateUI();
+    }
+
+    //Высадка десанта с другой планеты
     public void LandTroops(Owner troopsOwner, int count)
     {
         if (troopsOwner != _owner)
@@ -97,23 +116,7 @@ public class Planet : MonoBehaviour
         UpdateUI();
     }
 
-    public void SendTroops(Planet targetPlanet)
-    {
-        if (population < 2) return;
-        int troopsCount = population / 2;
-        population -= troopsCount;
-
-        for (int i = 0; i < troopsCount; i++)
-        {
-            Vector3 spawn = transform.position;
-            spawn.z = 10;
-            Battleship b = Instantiate(GameManager.instance.battleshipPrefab, spawn, Quaternion.identity).GetComponent<Battleship>();
-            b.SetTarget(owner, targetPlanet.gameObject, 1);
-        }
-
-        UpdateUI();
-    }
-
+    //Обновление индикатора населения и цвета планеты, в зависимости от владельца
     private void UpdateUI()
     {
         populationText.text = population.ToString();
@@ -133,6 +136,11 @@ public class Planet : MonoBehaviour
     {
         population -= count;
         UpdateUI();
+    }
+
+    public int GetPopulation()
+    {
+        return population;
     }
 
 }

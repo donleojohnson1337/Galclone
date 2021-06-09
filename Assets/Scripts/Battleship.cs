@@ -52,6 +52,7 @@ public class Battleship : MonoBehaviour
         this.target = target;
     }
 
+    //ƒвижение корабл€ в заданном направлении, поворот корабл€
     private void Update()
     {
         float step = speed * Time.deltaTime;
@@ -59,6 +60,7 @@ public class Battleship : MonoBehaviour
         transform.up = Vector3.Lerp(transform.up, (target.transform.position - transform.position), 0.1f);
     }
 
+    //ќбработка столкновений с коллайдерами
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ProcessCollision(collision.gameObject);
@@ -68,7 +70,6 @@ public class Battleship : MonoBehaviour
     {
         ProcessCollision(collision.gameObject);
     }
-
 
     private void ProcessCollision(GameObject gameObject)
     {

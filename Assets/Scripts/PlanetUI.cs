@@ -10,14 +10,12 @@ public class PlanetUI : MonoBehaviour
     public Color selectedColor;
     public SpriteRenderer highlightSprite;
 
-    public UnityEvent onMouseEnter;
-    public UnityEvent onMouseExit;
-    public UnityEvent onMouseClick;
-
     bool mouseClick = false;
     bool selected = false;
     bool active = false;
 
+
+    //ѕроверка возможности выбрать/подсветить планету
     private bool isSelectionAviable
     {
         get
@@ -34,23 +32,21 @@ public class PlanetUI : MonoBehaviour
     }
 
 
-
+    //ѕодсветка планеты при наведении
     private void OnMouseEnter()
     {
         if (isSelectionAviable && !selected)
         {
             highlightSprite.gameObject.SetActive(true);
-            onMouseEnter?.Invoke();
         }  
     }
 
     private void OnMouseExit()
     {
         mouseClick = false;
-        if (isSelectionAviable && !selected)
+        if (!selected)
         {
             highlightSprite.gameObject.SetActive(false);
-            onMouseExit?.Invoke();
         }  
     }
 
@@ -65,10 +61,11 @@ public class PlanetUI : MonoBehaviour
         if (mouseClick)
         {
             selected = !selected;
-            onMouseClick?.Invoke();
+            Select();
         } 
     }
 
+    //ќбработка клика по планете: выделение или его сн€тие дл€ своих планет, выбор планет дл€ десантировани€
     public void Select()
     {
         if (GetComponent<Planet>().owner == GameCommon.Owner.PLAYER)
@@ -82,11 +79,13 @@ public class PlanetUI : MonoBehaviour
             highlightSprite.color = col;
 
             GameManager.instance.SelectPlanet(GetComponent<Planet>());
-        } else
+        } else if (isSelectionAviable)
         {
             HideSelection();
             GameManager.instance.AttackPlanet(GetComponent<Planet>());
-            onMouseExit?.Invoke();
+        } else
+        {
+            HideSelection();
         }
     }
 
@@ -102,6 +101,11 @@ public class PlanetUI : MonoBehaviour
     public void SetActive(bool active = true)
     {
         this.active = active;
+        if (selected && !active)
+        {
+            HideSelection();
+            GameManager.instance.SelectPlanet(GetComponent<Planet>());
+        }
     }
 
 }

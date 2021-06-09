@@ -1178,9 +1178,9 @@
     <Compile Include="Assets\Scripts\GameCommon.cs" />
     <Compile Include="Assets\Scripts\Battleship.cs" />
     <Compile Include="Assets\Scripts\Planet.cs" />
+    <Compile Include="Assets\Scripts\AIBot.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\PlanetUI.cs" />
-    <Compile Include="Assets\Scripts\AIBot.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

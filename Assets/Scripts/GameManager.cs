@@ -68,7 +68,7 @@ public class GameManager : Singleton<GameManager>
     //Расстояние между планетами должно быть не меньше суммы их радиусов
     private void GeneratePlanets()
     {
-        List<Transform> createdPlanets = new List<Transform>();
+        List<Planet> createdPlanets = new List<Planet>();
 
         int i = 0;
         while (i<PLANETS_ON_LEVEL)
@@ -81,8 +81,9 @@ public class GameManager : Singleton<GameManager>
 
             bool check = true;
 
-            foreach (Transform t in createdPlanets)
+            foreach (Planet p in createdPlanets)
             {
+                Transform t = p.transform;
                 float planetRadius = t.localScale.x / 2;
                 if (Vector3.Distance(position, t.transform.position) < (planetRadius*2 + radius*2))
                 {
@@ -94,22 +95,23 @@ public class GameManager : Singleton<GameManager>
             if (!check) continue;
 
             int startPopulation = (int)(radius * 100); ;
-            Planet p = Instantiate(planetPrefab, position, Quaternion.identity).GetComponent<Planet>();
-            p.gameObject.transform.localScale = new Vector3(radius * 2, radius * 2, 1);
+            Planet planet = Instantiate(planetPrefab, position, Quaternion.identity).GetComponent<Planet>();
+            planet.gameObject.transform.localScale = new Vector3(radius * 2, radius * 2, 1);
 
-            createdPlanets.Add(p.transform);
+            createdPlanets.Add(planet);
 
             if (i==0)
             {
-                p.LandTroops(Owner.PLAYER, 50);
-                p.ui.SetActive();
+                planet.LandTroops(Owner.PLAYER, 50);
+                planet.ui.SetActive();
             }    
             else if (i == PLANETS_ON_LEVEL - 1)
-                p.LandTroops(Owner.AI, 50);
+                planet.LandTroops(Owner.AI, 50);
             else
-                p.LandTroops(Owner.NONE, startPopulation);
+                planet.LandTroops(Owner.NONE, startPopulation);
             i++;
         }
+        AIBot.instance.Init(createdPlanets);
     }
 
     public void SelectPlanet(Planet p)
